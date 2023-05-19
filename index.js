@@ -44,7 +44,7 @@ async function run() {
 
     app.get('/myAllToys/:email', async (req, res) => {
       const email = req.params.email;
-      const query = { "seller-email": email }
+      const query = { seller_email: email }
       const result = await toyCollection.find(query).toArray();
       res.send(result);
   })
@@ -54,6 +54,28 @@ async function run() {
     const query = { _id: new ObjectId(id) }
     const result = await toyCollection.findOne(query);
     res.send(result);
+})
+
+app.patch('/toy/update', async (req, res) => {
+  
+  const updateToy = req.body;
+  const id = updateToy.id;
+  const filter = { _id: new ObjectId(id) };
+  const updateDoc = {
+      $set: {
+          name: updateToy.name,
+          category: updateToy.category,
+          photoUrl: updateToy.photoUrl,
+          description: updateToy.description,
+          price: updateToy.price,
+          rating: updateToy.rating,
+          seller: updateToy.seller,
+          seller_phone: updateToy.seller_phone,
+          seller_email: updateToy.seller_email,
+      },
+  };
+  const result = await toyCollection.updateOne(filter, updateDoc);
+  res.send(result);
 })
 
 
