@@ -42,12 +42,18 @@ async function run() {
       res.send(result);
   });
 
-    app.get('/myAllToys/:email', async (req, res) => {
-      const email = req.params.email;
-      const query = { seller_email: email }
-      const result = await toyCollection.find(query).toArray();
-      res.send(result);
-  })
+  app.get('/myToys', async (req, res) => {
+    query = { seller_email: req.query.email }
+    const result = await toyCollection.find(query).toArray();
+    res.send(result);
+})
+
+  //   app.get('/myAllToys/:email', async (req, res) => {
+  //     const email = req.params.email;
+  //     const query = { seller_email: email }
+  //     const result = await toyCollection.find(query).toArray();
+  //     res.send(result);
+  // })
 
   app.get('/toy/edit/:id', async (req, res) => {
     const id = req.params.id;
@@ -75,6 +81,13 @@ app.patch('/toy/update', async (req, res) => {
       },
   };
   const result = await toyCollection.updateOne(filter, updateDoc);
+  res.send(result);
+})
+
+app.delete('/toy/delete/:id', async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) }
+  const result = await toyCollection.deleteOne(query);
   res.send(result);
 })
 
