@@ -35,18 +35,30 @@ async function run() {
 
 
 
-    app.post('/addToy', async (req, res) => {
-      const toy = req.body;
-      console.log(toy);
-      const result = await toyCollection.insertOne(toy);
-      res.send(result);
+  app.post('/addToy', async (req, res) => {
+    const toy = req.body;
+    console.log(toy);
+    const result = await toyCollection.insertOne(toy);
+    res.send(result);
   });
 
   app.get('/myToys', async (req, res) => {
     query = { seller_email: req.query.email }
     const result = await toyCollection.find(query).toArray();
     res.send(result);
-})
+  })
+
+  app.get('/allToys20', async (req, res) => {
+    const cursor = toyCollection.find().limit(20);
+    const result = await cursor.toArray();
+    res.send(result);
+  })
+
+  app.get('/allToys', async (req, res) => {
+    const cursor = toyCollection.find();
+    const result = await cursor.toArray();
+    res.send(result);
+  })
 
   //   app.get('/myAllToys/:email', async (req, res) => {
   //     const email = req.params.email;
@@ -60,7 +72,7 @@ async function run() {
     const query = { _id: new ObjectId(id) }
     const result = await toyCollection.findOne(query);
     res.send(result);
-})
+  })  
 
 app.patch('/toy/update', async (req, res) => {
   
