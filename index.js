@@ -1,3 +1,4 @@
+
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -48,6 +49,12 @@ async function run() {
     res.send(result);
   })
 
+  app.get('/category', async (req, res) => {
+    query = { category: req.query.category }
+    const result = await toyCollection.find(query).toArray();
+    res.send(result);
+  })
+
   app.get('/allToys20', async (req, res) => {
     const cursor = toyCollection.find().limit(20);
     const result = await cursor.toArray();
@@ -57,6 +64,12 @@ async function run() {
   app.get('/allToys', async (req, res) => {
     const cursor = toyCollection.find();
     const result = await cursor.toArray();
+    res.send(result);
+  })
+
+  app.get('/category', async (req, res) => {
+    query = { category: req.query.category }
+    const result = await toyCollection.find(query).limit(4).toArray();
     res.send(result);
   })
 
