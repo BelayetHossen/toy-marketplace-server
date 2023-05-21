@@ -65,12 +65,30 @@ async function run() {
     res.send(result);
   })
 
-  app.post('/search', async (req, res) => {
-    const key = req.body;
-    console.log(key);
-    // const cursor = toyCollection.find({name : {"$in" : key}});
-    // const result = await cursor.toArray();
-    // res.send(result);
+  app.get('/sort', async (req, res) => {
+    const key = req.query.sort;
+    if (key=='asc') {
+      const cursor = toyCollection.find().sort({ price: "asc" });
+      const result = await cursor.toArray();
+    res.send(result);
+    } else if(key=='desc') {
+      const cursor = toyCollection.find().sort({ price: "desc" });
+      const result = await cursor.toArray();
+    res.send(result);
+    } else{
+      const cursor = toyCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    }
+    
+  })
+
+  app.get('/search', async (req, res) => {
+    const key = req.query.name;
+    
+    const cursor = toyCollection.find({ name: { $regex: key, $options: 'i' } });
+    const result = await cursor.toArray();
+    res.send(result);
   })
 
   app.get('/category', async (req, res) => {
@@ -108,6 +126,7 @@ app.patch('/toy/update', async (req, res) => {
           description: updateToy.description,
           price: updateToy.price,
           rating: updateToy.rating,
+          qty: updateToy.qty,
           seller: updateToy.seller,
           seller_phone: updateToy.seller_phone,
           seller_email: updateToy.seller_email,
